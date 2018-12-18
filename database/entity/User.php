@@ -12,7 +12,7 @@
 
         public function __construct($id, $username, $password, $mail, $user_type, $created_at, $updated_at)
         {
-            //引数が一つのとき
+            //引数が一つのとき(PDOのStatementオブジェクトのとき)
             if (func_num_args() == 1) {
                 $row = $id;
                 $this->id = $row['id'];
