@@ -15,7 +15,7 @@
          * */
 
         //ログイン
-        public function login($username, $user_id)
+        public function login($username, $user_id, $to_url)
         {
             //CSRFトークンが正しければ
             if ($this->validate_token()) {
@@ -23,7 +23,7 @@
                 $this->set_session('username', $username);
                 $this->set_session('user_id', $user_id);
                 $_SESSION['csrf_token'] = $this->generate_token();
-                header('Location: /');
+                header('Location: '.$to_url);
                 exit;
             }
             return false;

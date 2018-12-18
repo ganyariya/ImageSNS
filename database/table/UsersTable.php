@@ -11,11 +11,7 @@
             $this->pdo = $pdo;
         }
 
-        public function select()
-        {
-
-        }
-
+        //ユーザーの追加
         public function add(User $user)
         {
             try {
@@ -31,6 +27,7 @@
             }
         }
 
+        //ユーザーの削除
         public function delete($id)
         {
             try {
@@ -44,6 +41,8 @@
         }
 
         //ユーザの定義が正しいかチェックで認証
+        //trueならデータベースに登録してよし
+        //falseならデータベースに登録してはいけない(再入力)
         public function validate(User $user)
         {
             $good = true;
