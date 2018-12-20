@@ -1,3 +1,33 @@
+<?php
+include_once "database/Session.php";
+include_once "database/table/UsersTable.php";
+include_once "database/Database.php";
+
+$isLoginSuccess=true;
+
+$session =New Session();
+
+$db = new Database();
+$pdo = $db->pdo();
+
+$usersTable=new UsersTable($pdo);
+
+if ($session->is_login()) {
+    header('Location: ../../');
+} else if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["submit"])) {
+    $username=$_POST["username"];
+    $password=$_POST["password"];
+
+    $user_id=$usersTable->isUserExists($username,$password);
+
+    if ($user_id>=0){
+        $session->login($username,strval($user_id),"../../");
+    }else{
+        $isLoginSuccess=false;
+    }
+
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -36,19 +66,21 @@
 
 <main role="main">
     <div class="signin">
-        <form class="form-signin text-center">
-            <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+        <form class="form-signin text-center" method="post">
             <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+            <?php if ($isLoginSuccess===false) echo"<label>Username/Password違い</label>" ?>
             <label for="inputEmail" class="sr-only">Email address</label>
-            <input type="text" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <input name="username" type="text" id="inputEmail" class="form-control" placeholder="Email address" required
+                   autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password"
+                   required>
             <div class="checkbox mb-3">
                 <label>
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button name="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         </form>
     </div>
 </main>

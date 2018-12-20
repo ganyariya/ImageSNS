@@ -9,7 +9,12 @@
                 </svg>
                 <strong>IMAGE SNS</strong>
             </a>
-            <a href="login.php"><button type="button" style="margin-right: 10px; vertical-align: center" class="btn btn-success">Login</button></a>
+            <?php
+            if ($session->is_login()) {
+                echo '<a>' . "aaa" . '</a>';
+            } else {
+                echo '<a href="login.php"><button type="button" style="margin-right: 10px; vertical-align: center" class="btn btn-success">Login</button></a>';
+            } ?>
         </div>
     </div>
 </header>
