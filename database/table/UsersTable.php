@@ -33,6 +33,31 @@ class UsersTable
         }
     }
 
+    public function getUserById($id)
+    {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+
+            $result = $stmt->fetch();
+
+            $username = $result['username'];
+            $password = $result['password'];
+            $mail = $result['mail'];
+            $user_type = $result['user_type'];
+            $created_at = $result['created_at'];
+            $updated_at = $result['updated_at'];
+
+            $user = new User($id, $username, $password, $mail, $user_type, $created_at, $updated_at);
+
+            return $user;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            exit();
+        }
+    }
+
     //ユーザーの削除
     public function delete($id)
     {
@@ -51,16 +76,16 @@ class UsersTable
     //falseならデータベースに登録してはいけない(再入力)
     public function validate(User $user)
     {
-        $username=$user->getUsername();
+        $username = $user->getUsername();
 
         $query = $this->pdo->prepare("SELECT COUNT(*) FROM Users WHERE username=:username");
         $query->bindParam('username', $username);
         $query->execute();
         $query->setFetchMode(PDO::FETCH_ASSOC);
 
-        $result=$query->fetchColumn();
+        $result = $query->fetchColumn();
 
-        if ($result>0) return false; else return true;
+        if ($result > 0) return false; else return true;
     }
 
     //ユーザの存在をチェック
@@ -71,11 +96,11 @@ class UsersTable
         try {
             $query = $this->pdo->prepare("SELECT id, password FROM Users WHERE username=:username");
             $query->bindParam('username', $username);
-           // $query->bindParam('password', $hashedPass, PDO::PARAM_STR);
+            // $query->bindParam('password', $hashedPass, PDO::PARAM_STR);
             $query->execute();
-            $result=$query->fetchAll();
-            foreach ($result as $row){
-                if(password_verify($password, $row['password']))return $row['id'];
+            $result = $query->fetchAll();
+            foreach ($result as $row) {
+                if (password_verify($password, $row['password'])) return $row['id'];
             }
 
             return -1;

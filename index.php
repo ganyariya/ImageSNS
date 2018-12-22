@@ -1,6 +1,7 @@
 <?php
 include_once("database/Session.php");
 include_once("database/table/PostsTable.php");
+include_once("database/table/UsersTable.php");
 include_once("database/Database.php");
 
 $session = new Session();
@@ -13,6 +14,7 @@ $db = new Database();
 $pdo = $db->pdo();
 
 $postsTable = new PostsTable($pdo);
+$usersTable = new UsersTable($pdo);
 
 $posts = $postsTable->getAllPost();
 ?>
@@ -33,10 +35,7 @@ $posts = $postsTable->getAllPost();
     <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="css/cover.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
-          integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="/css/cover.css" rel="stylesheet">
 </head>
 
 <body>
@@ -52,21 +51,23 @@ $posts = $postsTable->getAllPost();
     echo '<div class="album py-5 bg-light" style="margin: 0 auto">
         <div class="container">';
     foreach ($posts as $post) {
+        $user = $usersTable->getUserById($post->getUserId());
+
         echo '<div class="row justify-content-center">
                 <div class="col-md-5">
                     <div class="card mb-5 shadow-sm">
-                        <img class="card-img-top"';
-        echo 'src="images/' . $post->getUrl() . '"';
-        echo 'alt="Card image cap">
-                    <a class="user_link" href="mypage.php?user_id='.$user_id.'">' . $username . '</a>
+                        <img class="card-img-top"
+                         src="images/' . $post->getUrl() . '"
+                        alt="Card image cap">
+                    <a class="user_link" href="mypage.php?user_id=' . $user->getId() . '">' . $user->getUsername() . '</a>
                         <div class="card-body">
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
+                            <p class="card-text">'.$post->getComment().'</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"><i class="far fa-heart"></i> Like</button>
-                                    <button type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit</button>
-                                </div>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary"><i class="far fa-heart"></i> Like</button>';
+        if ($user_id === $user->getId())
+                                    echo '<button type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit</button>';
+                                echo '</div>
                                 <small class="text-muted">9 mins</small>
                             </div>
                         </div>
