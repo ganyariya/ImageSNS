@@ -1,30 +1,35 @@
 <?php
 include_once "database/Session.php";
 include_once "database/table/UsersTable.php";
+include_once "database/table/PostsTable.php";
+include_once "database/entity/Post.php";
 include_once "database/Database.php";
 
 $isLoginSuccess = true;
 
 $session = New Session();
 
+$is_login = $session->is_login();
+$user_id = $session->get_user_id();
+$username = $session->get_user_name();
+
 $db = new Database();
 $pdo = $db->pdo();
 
 $usersTable = new UsersTable($pdo);
+$postsTable=new PostsTable($pdo);
 
-if ($session->is_login() === true) {
-    header('Location: ../../index.php');
+if ($session->is_login() === false) {
+    header('Location: ../../login.php');
 } else {
-    if (isset($_POST['submit'])) {
-        $username=$_POST['username'];
-        $password=$_POST['password'];
-        $mail=$_POST["mail"];
+    if (isset($_POST['btnUpload'])) {
+        $filename = $session->get_user_id() . date('dmYHis') . $_FILES['image']['name'];
+        $comment = $_POST['comment'];
+        move_uploaded_file($_FILES['image']['tmp_name'], './images/' . $filename);
 
-        $user=new User(0,$username,$password,$mail,2,"","");
-        if($usersTable->validate($user)) {
-            $id = $usersTable->add($user);
-            $session->login($username, $id, "../../index.php");
-        }
+        $post = new Post(0, $session->get_user_id(), $filename, 0, $comment, "", "", "");
+        $postsTable->add($post);
+        header('Location: ../../index.php');
     }
 }
 ?>
@@ -44,7 +49,7 @@ if ($session->is_login() === true) {
 
     <!-- Custom styles for this template -->
     <link href="/css/cover.css" rel="stylesheet">
-    <link href="form-validation.css" rel="stylesheet">
+    <link href="/css/form-validation.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
@@ -57,14 +62,11 @@ if ($session->is_login() === true) {
             has a validation state that can be triggered by attempting to submit the form without completing it.</p>
     </div>
     <div class="col-md-8 order-md-1 signup">
-        <form class="needs-validation" novalidate method="post">
+        <form class="needs-validation" novalidate method="post" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="username">ユーザネーム</label>
+                <label for="FILE">FILE</label>
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">@</span>
-                    </div>
-                    <input name="username" type="text" class="form-control" id="username" placeholder="ユーザネーム" required>
+                    <input name="image" type="file" class="form-control" id="username" placeholder="file URL" required>
                     <div class="invalid-feedback" style="width: 100%;">
                         ユーザネームを入力してください。
                     </div>
@@ -72,33 +74,15 @@ if ($session->is_login() === true) {
             </div>
 
             <div class="mb-3">
-                <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                <input name="mail" type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                <label for="email">Comment <span class="text-muted">(Optional)</span></label>
+                <textarea name="comment" type="text" class="form-control" placeholder="you@example.com"></textarea>
                 <div class="invalid-feedback">
                     正しいメールアドレスを入力してください。
                 </div>
             </div>
 
-            <div class="mb-3">
-                <label for="password">パスワード</label>
-                <input name="password" type="password" class="form-control" id="password" placeholder="**********"
-                       required>
-                <div class="invalid-feedback">
-                    パスワードを入力してください。
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="repassword">パスワード（確認）</label>
-                <input name="repassword" type="password" class="form-control" id="repassword" placeholder="**********"
-                       required>
-                <div class="invalid-feedback">
-                    パスワードをもう一回入力してください。
-                </div>
-            </div>
-
             <hr class="mb-4">
-            <button name="submit" class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+            <button name="btnUpload" class="btn btn-primary btn-lg btn-block" type="submit">Upload</button>
         </form>
     </div>
 </div>
@@ -115,7 +99,7 @@ if ($session->is_login() === true) {
         crossorigin="anonymous"></script>
 <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
 <script src="../../assets/js/vendor/popper.min.js"></script>
-<script src="../../dist/js/bootstrap.min.js"></script>
+<script src="bootstrap/js/bootstrap.js"></script>
 <script src="../../assets/js/vendor/holder.min.js"></script>
 <script>
     // Example starter JavaScript for disabling form submissions if there are invalid fields

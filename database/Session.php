@@ -18,15 +18,31 @@ class Session
     public function login($username, $user_id, $to_url)
     {
         //CSRFトークンが正しければ
-        //if ($this->validate_token()) {
-        session_regenerate_id(true);
-        $this->set_session('username', $username);
-        $this->set_session('user_id',$user_id);
-        $_SESSION['csrf_token'] = $this->generate_token();
-        header('Location: ' . $to_url);
-        exit;
-        //}
+        if ($this->validate_token()) {
+            session_regenerate_id(true);
+            $this->set_session('user_id', $user_id);
+            $this->set_session('username', $username);
+            $_SESSION['csrf_token'] = $this->generate_token();
+            header('Location: ' . $to_url);
+            exit;
+        }
         return false;
+    }
+
+    public function get_user_id()
+    {
+        if ($this->is_login() === true) {
+            return $this->get_session('user_id');
+        } else
+            return -1;
+    }
+
+    public function get_user_name()
+    {
+        if ($this->is_login() === true) {
+            return $this->get_session('username');
+        } else
+            return -1;
     }
 
     //ログアウト
@@ -68,6 +84,8 @@ class Session
     //ログインしているか
     public function is_login()
     {
+//        $this->set_session('user_id',55);
+//        echo $this->get_session('user_id');
         return $this->validate_token() && $this->get_session('username') && $this->get_session('user_id');
     }
 

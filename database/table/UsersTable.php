@@ -13,17 +13,20 @@ class UsersTable
     //ユーザーの追加
     public function add(User $user)
     {
-        $username=$user->getUsername();
-        $password=hash("sha256",$user->getPassword());
-        $mail=$user->getMail();
-        $user_type=$user->getUserType();
+        $username = $user->getUsername();
+        $password = password_hash($user->getPassword(), PASSWORD_DEFAULT);
+        $mail = $user->getMail();
+        $user_type = $user->getUserType();
         try {
             $stmt = $this->pdo->prepare("INSERT INTO Users(username, password, mail, user_type) VALUES (:username, :password, :mail, :user_type)");
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->bindParam(':password', $password, PDO::PARAM_STR);
             $stmt->bindParam(':mail', $mail, PDO::PARAM_STR);
             $stmt->bindParam(':user_type', $user_type, PDO::PARAM_INT);
+
             $stmt->execute();
+
+            return $this->pdo->lastInsertId();
         } catch (PDOException $e) {
             echo $e->getMessage();
             exit();
@@ -48,34 +51,34 @@ class UsersTable
     //falseならデータベースに登録してはいけない(再入力)
     public function validate(User $user)
     {
-        $good = false;
+        $username=$user->getUsername();
 
-        //認証チェック
+        $query = $this->pdo->prepare("SELECT COUNT(*) FROM Users WHERE username=:username");
+        $query->bindParam('username', $username);
+        $query->execute();
+        $query->setFetchMode(PDO::FETCH_ASSOC);
 
-        return $good;
+        $result=$query->fetchColumn();
+
+        if ($result>0) return false; else return true;
     }
 
     //ユーザの存在をチェック
     //存在したらidを返す
     //存在しないなら-1返す
-    public function isUserExists($username, $password){
+    public function isUserExists($username, $password)
+    {
         try {
-            $hashedPass=hash("sha256",$password);
-
-            $query = $this->pdo->prepare("SELECT COUNT(*) FROM Users WHERE username=:username AND password=:password LIMIT 1");
+            $query = $this->pdo->prepare("SELECT id, password FROM Users WHERE username=:username");
             $query->bindParam('username', $username);
-            $query->bindParam('password', $hashedPass, PDO::PARAM_STR);
-
+           // $query->bindParam('password', $hashedPass, PDO::PARAM_STR);
             $query->execute();
-            $query->setFetchMode(PDO::FETCH_ASSOC);
-
-            if ($query->fetchColumn() > 0){
-                $result= $query->fetch();
-                return $result["id"];
-            }else{
-                return -1;
+            $result=$query->fetchAll();
+            foreach ($result as $row){
+                if(password_verify($password, $row['password']))return $row['id'];
             }
 
+            return -1;
         } catch (PDOException $e) {
             echo $e->getMessage();
             exit();

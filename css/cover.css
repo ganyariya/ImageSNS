@@ -1,3 +1,11 @@
+.user_link:link{
+    text-decoration: underline;
+}
+
+.dropdown-menu{
+    min-width: 0rem !important;
+}
+
 :root {
     --jumbotron-padding-y: 3rem;
 }
