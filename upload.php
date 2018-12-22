@@ -1,14 +1,12 @@
 <?php
 include_once "database/Session.php";
-include_once "database/table/UsersTable.php";
 include_once "database/table/PostsTable.php";
 include_once "database/entity/Post.php";
 include_once "database/Database.php";
 
-$isLoginSuccess = true;
-
 $session = New Session();
 
+//headerで使う
 $is_login = $session->is_login();
 $user_id = $session->get_user_id();
 $username = $session->get_user_name();
@@ -16,7 +14,6 @@ $username = $session->get_user_name();
 $db = new Database();
 $pdo = $db->pdo();
 
-$usersTable = new UsersTable($pdo);
 $postsTable=new PostsTable($pdo);
 
 if ($session->is_login() === false) {
@@ -68,17 +65,14 @@ if ($session->is_login() === false) {
                 <div class="input-group">
                     <input name="image" type="file" class="form-control" id="username" placeholder="file URL" required>
                     <div class="invalid-feedback" style="width: 100%;">
-                        ユーザネームを入力してください。
+                        画像を選択してください。
                     </div>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label for="email">Comment <span class="text-muted">(Optional)</span></label>
-                <textarea name="comment" type="text" class="form-control" placeholder="you@example.com"></textarea>
-                <div class="invalid-feedback">
-                    正しいメールアドレスを入力してください。
-                </div>
+                <textarea name="comment" type="text" class="form-control" placeholder="Comment"></textarea>
             </div>
 
             <hr class="mb-4">

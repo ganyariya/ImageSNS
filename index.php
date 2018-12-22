@@ -6,6 +6,7 @@ include_once("database/Database.php");
 
 $session = new Session();
 
+//headerで使う
 $is_login = $session->is_login();
 $user_id = $session->get_user_id();
 $username = $session->get_user_name();
