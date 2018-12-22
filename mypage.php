@@ -10,14 +10,20 @@ $is_login = $session->is_login();
 $user_id = $session->get_user_id();
 $username = $session->get_user_name();
 
+if (isset($_GET['user_id'])) {
+    $page_id = $_GET['user_id'];
+}
+
 $db = new Database();
 $pdo = $db->pdo();
 
 $postsTable = new PostsTable($pdo);
 $usersTable = new UsersTable($pdo);
 
-$posts = $postsTable->getAllPost();
+$posts = $postsTable->getAllPostByUserId($page_id);
+$user = $usersTable->getUserById($page_id);
 ?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,17 +49,13 @@ $posts = $postsTable->getAllPost();
 <?php include_once("header.php") ?>
 
 <main role="main">
-    <?php
-    if (!$session->is_login()) {
-        include_once("page_description.php");
-    }
 
-    echo '<div class="album py-5 bg-light" style="margin: 0 auto">
-        <div class="container">';
-    foreach ($posts as $post) {
-        $user = $usersTable->getUserById($post->getUserId());
-
-        echo '<div class="row justify-content-center">
+    <strong>User: <?php echo $user->getUsername();?></strong>
+    <div class="album py-5 bg-light" style="margin: 0 auto">
+        <div class="container">
+            <?php
+            foreach ($posts as $post) {
+                echo '<div class="row justify-content-center">
                 <div class="col-md-5">
                     <div class="card mb-5 shadow-sm">
                         <img class="card-img-top"
@@ -61,22 +63,22 @@ $posts = $postsTable->getAllPost();
                         alt="Card image cap">
                     <a class="user_link" href="mypage.php?user_id=' . $user->getId() . '">' . $user->getUsername() . '</a>
                         <div class="card-body">
-                            <p class="card-text">'.$post->getComment().'</p>
+                            <p class="card-text">' . $post->getComment() . '</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-sm btn-outline-secondary"><i class="far fa-heart"></i> Like</button>';
-        if ($user_id === $user->getId())
-                                    echo '<button type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit</button>';
-                                echo '</div>
-                                <small class="text-muted">'.$post->getPostDate().'</small>
+                if ($user_id === $user->getId())
+                    echo '<button type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit</button>';
+                echo '</div>
+                                <small class="text-muted">' . $post->getPostDate() . '</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>';
-    }
-    ?>
-    </div>
+            }
+            ?>
+        </div>
     </div>
 
 </main>
@@ -104,3 +106,4 @@ $posts = $postsTable->getAllPost();
 <script src="../../assets/js/vendor/holder.min.js"></script>
 </body>
 </html>
+
