@@ -7,6 +7,7 @@
         private $password;
         private $mail;
         private $user_type;
+        private $type;
         private $created_at;
         private $updated_at;
 
