@@ -1,8 +1,8 @@
 <?php
 
-    include_once "./Database.php";
+include_once "./../Database.php";
 
-    $sql = "CREATE TABLE Users(
+$sql = "CREATE TABLE Users(
             id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             username VARCHAR(255) NOT NULL,
             password TEXT NOT NULL,
@@ -12,12 +12,12 @@
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP 
     )";
 
-    try {
-        $db = new Database();
-        $pdo = $db->pdo();
-        $pdo->query($sql);
-    } catch (PDOException $e) {
-        echo $e;
-        exit();
-    }
+try {
+    $db = new Database();
+    $pdo = $db->pdo();
+    $pdo->query($sql);
+} catch (PDOException $e) {
+    echo $e;
+    exit();
+}
 
