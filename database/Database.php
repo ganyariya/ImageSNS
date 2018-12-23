@@ -5,7 +5,7 @@ class Database
     private $host = "localhost";
     private $dbname = "ubimap_team08db";
     private $username = "root";
-    private $password = "vertrigo";
+    private $password = "root";
 
     public function pdo()
     {
