@@ -34,30 +34,32 @@
 
         <?php if (!$session->is_login()) include_once dirname(__FILE__) . "/page_description.php"; ?>
 
-        <div class="album py-5 bg-light" style="margin: 0 auto">
+        <div class="album py-6 bg-light" style="margin: auto;">
             <div class="container">
 
                 <?php foreach ($posts as $post) : ?>
                     <?php $user = $usersTable->getUserById($post->getUserId()); ?>
-                    <div class="row justify-content-center">
-                        <div class="col-md-5">
-                            <div class="card mb-5 shadow-sm">
+                    <div class="row justify-content-center" style="">
+                        <div class="col-md-6">
+                            <div style="margin-top: 4rem;"></div>
+                            <div class="card mb-7 shadow-sm">
                                 <img class="card-img-top"
-                                     src="<?php echo 'images/' . h($post->getUrl()); ?>"
-                                     alt="Card image cap">
-                                <a class="user_link"
-                                   href="<?php echo 'mypage.php?user_id=' . h($user->getId()); ?>"> <?php echo h($user->getUsername()); ?></a>
+                                     src="<?php echo 'images/' . h($post->getUrl()); ?>">
                                 <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="<?php echo 'mypage.php?user_id=' . h($user->getId()); ?>" style="color: black"> <?php echo h($user->getUsername()); ?></a>
+                                    </h5>
                                     <p class="card-text"> <?php echo h($post->getComment()) ?></p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary"><i
-                                                        class="far fa-heart"></i> Like
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    id="like<?php echo h($post->getId()); ?>">
+                                                <i class="far fa-heart"> <?php echo h($post->getLikes()) ?></i>
                                             </button>
 
                                             <?php if ($user_id === $user->getId()) : ?>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"><i
-                                                            class="fas fa-pen"></i> Edit
+                                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                ><i class="fas fa-pen"></i> Edit
                                                 </button>
                                             <?php endif ?>
                                         </div>
@@ -70,40 +72,57 @@
 
                 <?php endforeach; ?>
 
-                <!--                --><?php
-                    //                    foreach ($posts as $post) {
-                    //                        $user = $usersTable->getUserById($post->getUserId());
-                    //
-                    //                        echo '<div class="row justify-content-center">
-                    //                <div class="col-md-5">
-                    //                    <div class="card mb-5 shadow-sm">
-                    //                        <img class="card-img-top"
-                    //                         src="images/' . $post->getUrl() . '"
-                    //                        alt="Card image cap">
-                    //                    <a class="user_link" href="mypage.php?user_id=' . $user->getId() . '">' . $user->getUsername() . '</a>
-                    //                        <div class="card-body">
-                    //                            <p class="card-text">' . $post->getComment() . '</p>
-                    //                            <div class="d-flex justify-content-between align-items-center">
-                    //                                <div class="btn-group">
-                    //                                    <button type="button" class="btn btn-sm btn-outline-secondary"><i class="far fa-heart"></i> Like</button>';
-                    //                        if ($user_id === $user->getId())
-                    //                            echo '<button type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit</button>';
-                    //                        echo '</div>
-                    //                                <small class="text-muted">' . $post->getPostDate() . '</small>
-                    //                            </div>
-                    //                        </div>
-                    //                    </div>
-                    //                </div>
-                    //            </div>';
-                    //                    }
-                    //                ?>
             </div>
         </div>
 
     </main>
 
-
     <?php include_once dirname(__FILE__) . "/footer.php" ?>
+
+    <script>
+        iziToast.settings({
+            icon: 'fontawesome'
+        })
+        <?php foreach($posts as $post) : ?>
+        $('#like<?php echo h($post->getId());?>').click(function () {
+            axios.get('like.php?id=<?php echo h($post->getId());?>')
+                .then((response) => {
+                    if (response.data == "success") {
+                        var likes = $('#like<?php echo h($post->getId());?>').children().first();
+                        likes.text(' ' + (parseInt(likes.text()) + 1));
+                        iziToast.show({
+                            theme: 'light',
+                            title: 'I Love it!',
+                            color: 'red',
+                            titleColor: 'white',
+                            icon: 'fa fa-heart',
+                            iconColor: 'white'
+                        })
+                    }
+                    if (response.data === 'not_login') {
+                        iziToast.show({
+                            theme: 'light',
+                            title: 'Sorry',
+                            titleColor: 'black',
+                            icon: 'fa fa-times',
+                            iconColor: 'black',
+                            message: 'Please, login.'
+                        })
+                    }
+                    if (response.data === 'no_id') {
+                        iziToast.show({
+                            theme: 'light',
+                            title: 'Sorry',
+                            titleColor: 'black',
+                            icon: 'fa fa-times',
+                            iconColor: 'black',
+                            message: '????'
+                        })
+                    }
+                })
+        });
+        <?php endforeach; ?>
+    </script>
 
 </body>
 </html>
