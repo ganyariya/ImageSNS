@@ -36,7 +36,7 @@
         public function delete($id)
         {
             try {
-                $stmt = $this->pdo->prepare("DELETE FROM Users WHERE id = :id");
+                $stmt = $this->pdo->prepare("DELETE FROM Posts WHERE id = :id");
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
             } catch (PDOException $e) {
@@ -99,6 +99,36 @@
                 }
 
                 return $ret;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                exit();
+            }
+        }
+
+        //ポストIDにあったポストを返す
+        public function getPostById($id)
+        {
+            try {
+                $stmt = $this->pdo->prepare("SELECT * FROM Posts WHERE id = :id");
+                $stmt->bindParam(':id', $id);
+                $stmt->execute();
+
+                $row = $stmt->fetch();
+
+                //ポストIDに一致するものがない
+                if ($stmt->rowCount() == 0)return -1;
+
+                $id = $row['id'];
+                $user_id = $row['user_id'];
+                $url = $row['url'];
+                $like = $row['likes'];
+                $comment = $row['comment'];
+                $post_date = $row['post_date'];
+                $created_at = $row['created_at'];
+                $updated_at = $row['updated_at'];
+
+                $post = new Post($id, $user_id, $url, $like, $comment, $post_date, $created_at, $updated_at);
+                return $post;
             } catch (PDOException $e) {
                 echo $e->getMessage();
                 exit();
