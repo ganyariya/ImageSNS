@@ -7,6 +7,7 @@
     $isLoginSuccess = true;
 
     $session = New Session();
+    $title  = "IMAGE SNS - LogIn";
 
     $db = new Database();
     $pdo = $db->pdo();

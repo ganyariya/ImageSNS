@@ -6,6 +6,7 @@
     include_once dirname(__FILE__) . "/lib/util.php";
 
     $session = new Session();
+    $title = "IMAGE SNS";
 
     //headerで使う
     $is_login = $session->is_login();

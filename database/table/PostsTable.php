@@ -1,6 +1,6 @@
 <?php
 
-    include_once dirname(__FILE__)."/../entity/Post.php";
+    include_once dirname(__FILE__) . "/../entity/Post.php";
 
     class PostsTable
     {
@@ -101,6 +101,18 @@
                 return $ret;
             } catch (PDOException $e) {
                 echo $e->getMessage();
+                exit();
+            }
+        }
+
+        public function incrementLike($id)
+        {
+            try {
+                $stmt = $this->pdo->prepare("UPDATE Posts SET likes = likes + 1 WHERE id = :id");
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+                return $stmt->rowCount();
+            } catch (PDOException $e) {
                 exit();
             }
         }

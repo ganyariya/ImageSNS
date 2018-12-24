@@ -5,6 +5,7 @@
     include_once("database/Database.php");
 
     $session = new Session();
+    $title  = "IMAGE SNS - MyPage";
 
     $is_login = $session->is_login();
     $user_id = $session->get_user_id();
