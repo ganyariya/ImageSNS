@@ -3,8 +3,10 @@
     include_once "database/table/PostsTable.php";
     include_once "database/entity/Post.php";
     include_once "database/Database.php";
+    include_once dirname(__FILE__) . "/lib/util.php";
 
     $session = New Session();
+   $title  = "IMAGE SNS - Upload";
 
     //headerで使う
     $is_login = $session->is_login();

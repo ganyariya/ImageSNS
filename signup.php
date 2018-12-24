@@ -7,6 +7,7 @@
     $isLoginSuccess = true;
 
     $session = New Session();
+    $title  = "IMAGE SNS - SignUp";
 
     $db = new Database();
     $pdo = $db->pdo();
