@@ -18,8 +18,8 @@
 
     $postsTable = new PostsTable($pdo);
     $usersTable = new UsersTable($pdo);
-
-    $posts = $postsTable->getAllPost();
+    
+    $posts = $postsTable->getAllPostWithUser();
 ?>
 <!doctype html>
 <html lang="jp">
@@ -39,7 +39,6 @@
             <div class="container">
 
                 <?php foreach ($posts as $post) : ?>
-                    <?php $user = $usersTable->getUserById($post->getUserId()); ?>
                     <div class="row justify-content-center" style="">
                         <div class="col-md-6">
                             <div style="margin-top: 4rem;"></div>
@@ -48,7 +47,8 @@
                                      src="<?php echo 'images/' . h($post->getUrl()); ?>">
                                 <div class="card-body">
                                     <h5 class="card-title">
-                                        <a href="<?php echo 'mypage.php?user_id=' . h($user->getId()); ?>" style="color: black"> <?php echo h($user->getUsername()); ?></a>
+                                        <a href="<?php echo 'mypage.php?user_id=' . h($post->getUserId()); ?>"
+                                           style="color: black"> <?php echo h($post->username); ?></a>
                                     </h5>
                                     <p class="card-text"> <?php echo h($post->getComment()) ?></p>
                                     <div class="d-flex justify-content-between align-items-center">
@@ -58,7 +58,7 @@
                                                 <i class="far fa-heart"> <?php echo h($post->getLikes()) ?></i>
                                             </button>
 
-                                            <?php if ($user_id === $user->getId()) : ?>
+                                            <?php if ($user_id === $post->getUserId()) : ?>
                                                 <button type="button" class="btn btn-sm btn-outline-secondary"
                                                 ><i class="fas fa-pen"></i> Edit
                                                 </button>
