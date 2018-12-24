@@ -59,8 +59,7 @@
                                             </button>
 
                                             <?php if ($user_id === $post->getUserId()) : ?>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                ><i class="fas fa-pen"></i> Edit
+                                                <button onclick="window.location.href='edit.php?id=<?php echo h($post->getId());?>'" type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit
                                                 </button>
                                             <?php endif ?>
                                         </div>

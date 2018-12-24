@@ -17,6 +17,7 @@
 
     if ($session->is_login()) {
         header('Location: ./index.php');
+        exit();
     } else if (isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["submit"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
