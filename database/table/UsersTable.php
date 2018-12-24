@@ -109,4 +109,19 @@
             }
         }
 
+        public function isUserExistsById($user_id)
+        {
+            try {
+                $stmt = $this->pdo->prepare("SELECT * FROM Users WHERE id = :id");
+                $stmt->bindParam(':id', $user_id);
+                $stmt->execute();
+
+                $row = $stmt->rowCount();
+                return $row >= 1;
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                exit();
+            }
+        }
+
     }
