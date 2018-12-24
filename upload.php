@@ -16,17 +16,25 @@
 
     $postsTable = new PostsTable($pdo);
 
+    $bad_extension = null;
+
     if ($session->is_login() === false) {
         header('Location: /login.php');
     } else {
         if (isset($_POST['btnUpload'])) {
             $filename = $session->get_user_id() . date('dmYHis') . $_FILES['image']['name'];
             $comment = $_POST['comment'];
-            move_uploaded_file($_FILES['image']['tmp_name'], './images/' . $filename);
+            $bad_extension = true;
 
-            $post = new Post(0, $session->get_user_id(), $filename, 0, $comment, "", "", "");
-            $postsTable->add($post);
-            header('Location: /index.php');
+            $extensions = array("image/png", "image/jpeg", "image/png");
+            foreach ($extensions as $extension) if (mime_content_type($_FILES['image']['tmp_name']) == $extension) $bad_extension = false;
+
+            if (move_uploaded_file($_FILES['image']['tmp_name'], './images/' . $filename) && !$bad_extension) {
+                $post = new Post(0, $session->get_user_id(), $filename, 0, $comment, "", "", "");
+                $postsTable->add($post);
+                header('Location: /index.php');
+            }
+
         }
     }
 ?>
@@ -37,22 +45,40 @@
 </head>
 
 <body class="bg-light">
+    <style>
+        .imagePreview {
+            width: 100%;
+            height: 500px;
+            background-position: center center;
+            background-size: cover;
+            -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, .3);
+            display: inline-block;
+        }
+    </style>
     <?php include_once dirname(__FILE__) . "/header.php" ?>
-    <div class="container">
+    <div class="container" style="margin-top: 2rem;">
         <div class="text-center">
-            <h2>Checkout form</h2>
+            <h2>画像のアップロード</h2>
         </div>
         <div class="col-md-8 order-md-1 signup" style="margin: 0 auto;">
-            <form class="needs-validation"  method="post" enctype="multipart/form-data">
+            <form class="needs-validation" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="FILE">FILE</label>
+                    <div class="imagePreview"></div>
                     <div class="input-group">
-                        <input name="image" type="file" class="form-control" id="username" placeholder="file URL"
-                               required>
-                        <div class="invalid-feedback" style="width: 100%;">
-                            画像を選択してください。
-                        </div>
+                        <label class="input-group-btn">
+                                <span class="btn btn-primary">
+                                    Choose File<input type="file" style="display:none" name="image" class="form-control"
+                                                      required>
+                                </span>
+                        </label>
+                        <input type="text" class="form-control" readonly="">
                     </div>
+                    <?php
+                        if($bad_extension){
+                            echo ("jpg, png, gifの画像のみアップロードできます。");
+                        }
+                    ?>
                 </div>
 
                 <div class="mb-3">
@@ -68,9 +94,23 @@
 
     <?php include_once dirname(__FILE__) . "/footer.php" ?>
 
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/popper.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.min.js"></script>
+    <script>
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.parent().parent().next(':text').val(label);
+
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+                reader.onloadend = function () { // set image data as background of div
+                    input.parent().parent().parent().prev('.imagePreview').css("background-image", "url(" + this.result + ")");
+                }
+            }
+        });
+    </script>
 </body>
 </html>

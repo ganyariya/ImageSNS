@@ -12,6 +12,7 @@
     $pdo = $db->pdo();
 
     $usersTable = new UsersTable($pdo);
+    $same_user_name = false;
 
     if ($session->is_login() === true) {
         header('Location: ../../index.php');
@@ -25,10 +26,12 @@
             $password_check = $password === $re_password;
 
             $user = new User(0, $username, $password, $mail, 2, "", "");
+
             if ($usersTable->validate($user) && $password_check) {
                 $id = $usersTable->add($user);
                 $session->login($username, $id, "./index.php");
             }
+            if (!$usersTable->validate($user)) $same_user_name = true;
 
         } else {
             $_SESSION['csrf_token'] = $session->generate_token();
@@ -44,7 +47,7 @@
 <body class="bg-light">
     <?php include_once("header.php") ?>
 
-    <div class="container">
+    <div class="container" style="margin-top: 2rem;">
         <div class="text-center">
             <h2>会員登録</h2>
         </div>
@@ -62,6 +65,11 @@
                             ユーザネームを入力してください。
                         </div>
                     </div>
+                    <?php if ($same_user_name): ?>
+                        <div>
+                            そのアカウントは使用されています。
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="mb-3">
@@ -104,10 +112,5 @@
     </div>
     <?php include_once dirname(__FILE__) . "/footer.php" ?>
 
-
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/popper.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.min.js"></script>
 </body>
 </html>

@@ -37,20 +37,18 @@
         <div class="album py-5 bg-light" style="margin: 0 auto">
             <div class="container">
 
-                <?php foreach ($posts
-
-                               as $post) : ?>
+                <?php foreach ($posts as $post) : ?>
                     <?php $user = $usersTable->getUserById($post->getUserId()); ?>
                     <div class="row justify-content-center">
                         <div class="col-md-5">
                             <div class="card mb-5 shadow-sm">
                                 <img class="card-img-top"
-                                     src="<?php echo 'images/' . $post->getUrl(); ?>"
+                                     src="<?php echo 'images/' . h($post->getUrl()); ?>"
                                      alt="Card image cap">
                                 <a class="user_link"
-                                   href="<?php echo 'mypage.php?user_id' . $user->getId(); ?>"> <?php echo $user->getUsername(); ?></a>
+                                   href="<?php echo 'mypage.php?user_id=' . h($user->getId()); ?>"> <?php echo h($user->getUsername()); ?></a>
                                 <div class="card-body">
-                                    <p class="card-text"> <?php echo $post->getComment() ?></p>
+                                    <p class="card-text"> <?php echo h($post->getComment()) ?></p>
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-sm btn-outline-secondary"><i
@@ -63,7 +61,7 @@
                                                 </button>
                                             <?php endif ?>
                                         </div>
-                                        <small class="text-muted"><?php echo $post->getPostDate(); ?></small>
+                                        <small class="text-muted"><?php echo h($post->getPostDate()); ?></small>
                                     </div>
                                 </div>
                             </div>
@@ -107,9 +105,5 @@
 
     <?php include_once dirname(__FILE__) . "/footer.php" ?>
 
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/popper.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.min.js"></script>
 </body>
 </html>

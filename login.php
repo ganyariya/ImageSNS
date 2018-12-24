@@ -12,6 +12,7 @@
     $pdo = $db->pdo();
 
     $usersTable = new UsersTable($pdo);
+    $username = null;
 
     if ($session->is_login()) {
         header('Location: ./index.php');
@@ -46,25 +47,22 @@
     <main role="main">
         <div class="signin">
             <form class="form-signin text-center" method="post">
-                <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
-                <?php if (!$isLoginSuccess) echo "<label>Username/Password違い</label>" ?>
+                <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+                <?php if (!$isLoginSuccess) echo "<label>usernameかパスワードが間違っています。</label>" ?>
                 <label for="inputEmail" class="sr-only">Username</label>
                 <input name="username" type="text" id="inputEmail" class="form-control" placeholder="User name"
+                       value="<?php echo h($username);?>"
                        required
                        autofocus>
                 <label for="inputPassword" class="sr-only">Password</label>
                 <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password"
                        required>
-                <button name="submit" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                <button name="submit" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
             </form>
         </div>
     </main>
 
     <?php include_once dirname(__FILE__) . "/footer.php" ?>
 
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/popper.min.js"></script>
-    <script src="/bootstrap/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.9.6/holder.min.js"></script>
 </body>
 </html>
