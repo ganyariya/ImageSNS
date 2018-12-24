@@ -26,7 +26,7 @@
           echo $username;
         echo '</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="/mypage.php">My Page</a>
+          <a class="dropdown-item" href="mypage.php?user_id='.$user_id.'">My Page</a>
           <a class="dropdown-item" href="logout.php">Logout</a>
         </div>
       </li>';
