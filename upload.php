@@ -76,7 +76,7 @@
                     </div>
                     <?php
                         if($bad_extension){
-                            echo ("jpg, png, gifの画像のみアップロードできます。");
+                            echo ("jpg, pngの画像のみアップロードできます。");
                         }
                     ?>
                 </div>
