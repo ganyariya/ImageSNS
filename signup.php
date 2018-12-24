@@ -1,8 +1,10 @@
 <?php
-    include_once dirname(__FILE__) . "/database/Session.php";
-    include_once dirname(__FILE__) . "/database/table/UsersTable.php";
-    include_once dirname(__FILE__) . "/database/Database.php";
-    include_once dirname(__FILE__) . "/lib/util.php";
+    include_once "database/Session.php";
+    include_once "database/table/PostsTable.php";
+    include_once "database/table/UsersTable.php";
+    include_once "database/Database.php";
+    include_once "lib/util.php";
+
 
     $isLoginSuccess = true;
 
@@ -16,7 +18,7 @@
     $same_user_name = false;
 
     if ($session->is_login() === true) {
-        header('Location: ../../index.php');
+        header('Location: index.php');
     } else {
         if (isset($_POST['submit'])) {
             $username = $_POST['username'];
@@ -30,7 +32,7 @@
 
             if ($usersTable->validate($user) && $password_check) {
                 $id = $usersTable->add($user);
-                $session->login($username, $id, "./index.php");
+                $session->login($username, $id, "index.php");
             }
             if (!$usersTable->validate($user)) $same_user_name = true;
 
@@ -42,7 +44,7 @@
 <!doctype html>
 <html lang="jp">
 <head>
-    <?php include_once dirname(__FILE__) . "/meta.php" ?>
+    <?php include_once "meta.php" ?>
 </head>
 
 <body class="bg-light">
@@ -111,7 +113,7 @@
             </form>
         </div>
     </div>
-    <?php include_once dirname(__FILE__) . "/footer.php" ?>
+    <?php include_once "footer.php" ?>
 
 </body>
 </html>

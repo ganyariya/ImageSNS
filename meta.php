@@ -4,11 +4,11 @@
 <title><?php echo h($title); ?></title>
 
 <!-- Bootstrap core CSS -->
-<link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="/css/cover.css" rel="stylesheet">
-<link href="/css/signin.css" rel="stylesheet">
+<link href="css/cover.css" rel="stylesheet">
+<link href="css/signin.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css"
       rel="stylesheet">
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"

@@ -1,9 +1,10 @@
 <?php
-    include_once dirname(__FILE__) . "/database/Session.php";
-    include_once dirname(__FILE__) . "/database/table/PostsTable.php";
-    include_once dirname(__FILE__) . "/database/table/UsersTable.php";
-    include_once dirname(__FILE__) . "/database/Database.php";
-    include_once dirname(__FILE__) . "/lib/util.php";
+    include_once "database/Session.php";
+    include_once "database/table/PostsTable.php";
+    include_once "database/table/UsersTable.php";
+    include_once "database/Database.php";
+    include_once "lib/util.php";
+
 
     $session = new Session();
 

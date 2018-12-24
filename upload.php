@@ -1,12 +1,13 @@
 <?php
     include_once "database/Session.php";
     include_once "database/table/PostsTable.php";
-    include_once "database/entity/Post.php";
+    include_once "database/table/UsersTable.php";
     include_once "database/Database.php";
-    include_once dirname(__FILE__) . "/lib/util.php";
+    include_once "lib/util.php";
+
 
     $session = New Session();
-   $title  = "IMAGE SNS - Upload";
+     $title  = "IMAGE SNS - Upload";
 
     //headerで使う
     $is_login = $session->is_login();
@@ -21,7 +22,7 @@
     $bad_extension = null;
 
     if ($session->is_login() === false) {
-        header('Location: /login.php');
+        header('Location: login.php');
     } else {
         if (isset($_POST['btnUpload'])) {
             $filename = $session->get_user_id() . date('dmYHis') . $_FILES['image']['name'];
@@ -34,7 +35,7 @@
             if (move_uploaded_file($_FILES['image']['tmp_name'], './images/' . $filename) && !$bad_extension) {
                 $post = new Post(0, $session->get_user_id(), $filename, 0, $comment, "", "", "");
                 $postsTable->add($post);
-                header('Location: /index.php');
+                header('Location: index.php');
             }
 
         }
@@ -43,7 +44,7 @@
 <!doctype html>
 <html lang="jp">
 <head>
-    <?php include_once dirname(__FILE__) . "/meta.php" ?>
+    <?php include_once "meta.php" ?>
 </head>
 
 <body class="bg-light">
@@ -57,7 +58,7 @@
             display: inline-block;
         }
     </style>
-    <?php include_once dirname(__FILE__) . "/header.php" ?>
+    <?php include_once "header.php" ?>
     <div class="container" style="margin-top: 2rem;">
         <div class="text-center">
             <h2>画像のアップロード</h2>
@@ -94,7 +95,7 @@
         </div>
     </div>
 
-    <?php include_once dirname(__FILE__) . "/footer.php" ?>
+    <?php include_once "footer.php" ?>
 
     <script>
         $(document).on('change', ':file', function () {
