@@ -160,7 +160,7 @@
                 $row = $stmt->fetch();
 
                 //ポストIDに一致するものがない
-                if ($stmt->rowCount() == 0)return -1;
+                if ($stmt->rowCount() == 0) return -1;
 
                 $id = $row['id'];
                 $user_id = $row['user_id'];
@@ -216,6 +216,63 @@
 
                 return $ret;
 
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                exit();
+            }
+        }
+
+        public function getLimitPostWithUser($page_start)
+        {
+            $ret = array();
+
+            try {
+                $stmt = $this->pdo->prepare("
+                    SELECT P.id, P.user_id, P.url, P.likes, P.comment, P.post_date, P.created_at, P.updated_at, U.username
+                    FROM Posts AS P
+                    INNER JOIN Users AS U
+                    on P.user_id = U.id
+                    ORDER BY post_date DESC
+                    LIMIT $page_start, 10
+                ");
+                $stmt->bindParam(':page_start', $page_start);
+                $stmt->execute();
+                $array = $stmt->fetchAll();
+
+                foreach ($array as $row) {
+                    $id = $row['id'];
+                    $user_id = $row['user_id'];
+                    $url = $row['url'];
+                    $like = $row['likes'];
+                    $comment = $row['comment'];
+                    $post_date = $row['post_date'];
+                    $created_at = $row['created_at'];
+                    $updated_at = $row['updated_at'];
+                    $username = $row['username'];
+
+                    $post = new Post($id, $user_id, $url, $like, $comment, $post_date, $created_at, $updated_at);
+
+                    //dynamic追加
+                    $post->username = $username;
+                    $ret[] = $post;
+                }
+
+                return $ret;
+
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                exit();
+            }
+        }
+
+        //ポストの投稿数の全体の数のみを返す
+        public function getAllPostCount()
+        {
+            try {
+                $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM Posts");
+                $stmt->execute();
+                $ret = $stmt->fetchColumn();
+                return $ret;
             } catch (PDOException $e) {
                 echo $e->getMessage();
                 exit();

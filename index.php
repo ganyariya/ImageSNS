@@ -19,8 +19,18 @@
 
     $postsTable = new PostsTable($pdo);
     $usersTable = new UsersTable($pdo);
-    
-    $posts = $postsTable->getAllPostWithUser();
+
+    //ページネーションの設定
+    $page = 1;
+    $page_start = 0;
+    if (isset($_GET['page']) && is_numeric($_GET['page'])) $page = (int)($_GET['page']);
+    if ($page > 1) $page_start = ($page - 1) * 10;
+
+    $posts = $postsTable->getLimitPostWithUser($page_start);
+    $posts_all_number = $postsTable->getAllPostCount();
+    $pagenation_number = (int)($posts_all_number / 10);
+    if ($posts_all_number % 10) $pagenation_number++;
+
 ?>
 <!doctype html>
 <html lang="jp">
@@ -60,7 +70,9 @@
                                             </button>
 
                                             <?php if ($user_id === $post->getUserId()) : ?>
-                                                <button onclick="window.location.href='edit.php?id=<?php echo h($post->getId());?>'" type="button" class="btn btn-sm btn-outline-secondary"><i class="fas fa-pen"></i> Edit
+                                                <button onclick="window.location.href='edit.php?id=<?php echo h($post->getId()); ?>'"
+                                                        type="button" class="btn btn-sm btn-outline-secondary"><i
+                                                            class="fas fa-pen"></i> Edit
                                                 </button>
                                             <?php endif ?>
                                         </div>
@@ -70,12 +82,36 @@
                             </div>
                         </div>
                     </div>
-
                 <?php endforeach; ?>
+                <!--                スペースが上手くいかないので-->
+
+                <div class="row justify-content-center" style="margin-bottom: 3rem">
+                    <div class="col-md-6"></div>
+                </div>
+
+                <div class="row justify-content-center" style="margin-bottom: 2rem">
+                    <div class="col-md-6">
+                        <nav aria-label="ポストページネーション">
+                            <ul class="pagination justify-content-center">
+                                <?php if ($page != 1): ?>
+                                    <li class="page-item"><a class="page-link"
+                                                             href="index.php?page=<?php echo($page - 1); ?>">前へ</a></li>
+                                <?php endif; ?>
+                                <?php for ($i = 0; $i < $pagenation_number; $i++) : ?>
+                                    <li class="page-item"><a class="page-link"
+                                                             href="index.php?page=<?php echo($i + 1); ?>"><?php echo($i + 1); ?></a>
+                                    </li>
+                                <?php endfor; ?>
+                                <?php if ($page != $pagenation_number): ?>
+                                    <li class="page-item"><a class="page-link" href="index.php?page=<?php echo($page + 1); ?>">次へ</a></li>
+                                <?php endif; ?>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
 
             </div>
         </div>
-
     </main>
 
     <?php include_once "footer.php" ?>
