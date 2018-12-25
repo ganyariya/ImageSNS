@@ -4,6 +4,7 @@
     include_once "database/Database.php";
     include_once "lib/util.php";
 
+
     $isLoginSuccess = true;
 
     $session = New Session();
@@ -25,7 +26,7 @@
         $user_id = $usersTable->isUserExists($username, $password);
 
         if ($user_id >= 0) {
-            $session->login($username, $user_id, "./index.php");
+            $session->login($username, $user_id, "index.php");
         } else {
             $isLoginSuccess = false;
         }
@@ -39,12 +40,12 @@
 <!doctype html>
 <html lang="jp">
 <head>
-    <?php include_once dirname(__FILE__) . "/meta.php" ?>
+    <?php include_once "meta.php" ?>
 </head>
 
 <body>
 
-    <?php include_once dirname(__FILE__) . "/header.php" ?>
+    <?php include_once "header.php" ?>
 
     <main role="main">
         <div class="signin">
@@ -64,7 +65,7 @@
         </div>
     </main>
 
-    <?php include_once dirname(__FILE__) . "/footer.php" ?>
+    <?php include_once  "footer.php" ?>
 
 </body>
 </html>

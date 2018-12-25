@@ -5,4 +5,4 @@ $session=new Session();
 
 $session->logout();
 
-header('Location: ../../');
+header('Location: index.php');

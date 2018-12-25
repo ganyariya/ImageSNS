@@ -1,9 +1,9 @@
 <?php
-    include_once dirname(__FILE__) . "/database/Session.php";
-    include_once dirname(__FILE__) . "/database/table/PostsTable.php";
-    include_once dirname(__FILE__) . "/database/table/UsersTable.php";
-    include_once dirname(__FILE__) . "/database/Database.php";
-    include_once dirname(__FILE__) . "/lib/util.php";
+    include_once "database/Session.php";
+    include_once "database/table/PostsTable.php";
+    include_once "database/table/UsersTable.php";
+    include_once "database/Database.php";
+    include_once "lib/util.php";
 
     $session = new Session();
     $title = "IMAGE SNS - MyPage";
@@ -39,13 +39,13 @@
 <!doctype html>
 <html lang="jp">
 <head>
-    <?php include_once dirname(__FILE__) . "/meta.php" ?>
+    <?php include_once "meta.php" ?>
 </head>
 
 
 <body>
 
-    <?php include_once dirname(__FILE__) . "/header.php" ?>
+    <?php include_once "header.php" ?>
 
     <main role="main">
 
@@ -96,7 +96,7 @@
     </main>
 
 
-    <?php include_once dirname(__FILE__) . "/footer.php" ?>
+    <?php include_once "footer.php" ?>
 
     <script>
         iziToast.settings({
