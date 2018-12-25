@@ -10,23 +10,24 @@
                 <strong>IMAGE SNS</strong>
             </a>
 
-            <div class="my-2 my-lg-0" id="navbarNavDropdown">
+            <div id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <?php
                     global $is_login;
                     global $username;
                     if ($is_login === true) {
                         echo '
-      <li class="nav-item">
+      <li class="nav-item" style="margin-right: 20px">
         <a href="upload.php"><button type="button" style="margin-right: 10px; vertical-align: center" class="btn btn-success">Upload</button></a>
       </li>
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown" style="margin-right: 30px">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
 
           echo $username;
         echo '</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="mypage.php?user_id='.$user_id.'">My Page</a>
+          <a class="dropdown-item" href="changepassword.php">Change Password</a>
           <a class="dropdown-item" href="logout.php">Logout</a>
         </div>
       </li>';
