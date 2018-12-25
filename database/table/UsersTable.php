@@ -124,4 +124,32 @@
             }
         }
 
+        public function isPasswordMatch($user_id, $password){
+            try {
+                $stmt = $this->pdo->prepare("SELECT password FROM Users WHERE id = :id");
+                $stmt->bindParam(':id', $user_id);
+                $stmt->execute();
+
+                $row = $stmt->fetch();
+                return password_verify($password, $row['password']);
+
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                exit();
+            }
+        }
+
+        public function changePassword($user_id, $password){
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
+            try {
+                $stmt = $this->pdo->prepare("UPDATE Users SET password=:password WHERE id=:id");
+                $stmt->bindParam(':id', $user_id);
+                $stmt->bindParam(':password', $password);
+                $stmt->execute();
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+                exit();
+            }
+        }
     }
