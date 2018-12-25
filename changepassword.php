@@ -1,8 +1,8 @@
 <?php
-include_once dirname(__FILE__) . "/database/Session.php";
-include_once dirname(__FILE__) . "/database/table/UsersTable.php";
-include_once dirname(__FILE__) . "/database/Database.php";
-include_once dirname(__FILE__) . "/lib/util.php";
+    include_once "database/Session.php";
+    include_once "database/table/UsersTable.php";
+    include_once "database/Database.php";
+    include_once "lib/util.php";
 
 $session = New Session();
 $title = "IMAGE SNS - Change Password";
@@ -20,7 +20,7 @@ $isOldPasswordMatch = false;
 $isSubmit = false;
 
 if (!$session->is_login()) {
-    header('Location: ../../login.php');
+    header('Location: login.php');
 } else {
     if (isset($_POST['submit'])) {
         $isSubmit = true;
@@ -36,7 +36,7 @@ if (!$session->is_login()) {
         if ($isOldPasswordMatch && $password_check) {
             $usersTable->changePassword($user_id, $newPassword);
 
-            header('Location: ../../index.php');
+            header('Location: index.php');
         }
     }
 }
@@ -44,7 +44,7 @@ if (!$session->is_login()) {
 <!doctype html>
 <html lang="jp">
 <head>
-    <?php include_once dirname(__FILE__) . "/meta.php" ?>
+    <?php include_once "meta.php" ?>
 </head>
 
 <body class="bg-light">
@@ -101,7 +101,7 @@ if (!$session->is_login()) {
         </form>
     </div>
 </div>
-<?php include_once dirname(__FILE__) . "/footer.php" ?>
+<?php include_once "footer.php" ?>
 
 </body>
 </html>
